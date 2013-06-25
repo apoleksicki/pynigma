@@ -57,6 +57,15 @@ class Machine(object):
         else:
             return self._sendThroughRotorsRight(rotors[0].encodeRight(letter), rotors[1:])
             
+    def _sendThroughRotorsLeft(self, letter, rotors):
+        
+        print '%c -> %c' % (letter, rotors[0].encodeRight(letter))
+        
+        if len(rotors) == 1:
+            return rotors[0].encodeLeft(letter)
+        else:
+            return self._sendThroughRotorsLeft(rotors[0].encodeLeft(letter), rotors[1:])
+            
     def encode(self, letter):
         pass
         
@@ -70,6 +79,10 @@ class MacineTest(unittest.TestCase):
     def test_sendThroughRotorsRight(self):
         self.assertEqual('G', self.machine._sendThroughRotorsRight('A', self.machine.rotors[::-1]))
         self.assertEqual('Y', self.machine._sendThroughRotorsRight('O', self.machine.rotors[::-1]))
+    
+    def test_sendThroughRotorsLeft(self):
+        self.assertEqual('A', self.machine._sendThroughRotorsLeft('G', self.machine.rotors[::1]))
+        self.assertEqual('O', self.machine._sendThroughRotorsLeft('Y', self.machine.rotors[::1]))
     
 class RotorTest(unittest.TestCase):
              
