@@ -34,10 +34,10 @@ class Rotor(object):
     def turnover(self):
         self._order.append(self._order.pop(0))
     
-    def encodeLeft(self, letter):
+    def encodeRight(self, letter):
         return self._order[Rotor._letter_number_map.get(letter)]
     
-    def encodeRight(self, letter):
+    def encodeLeft(self, letter):
         return Rotor._number_letter_map.get(self._order.index(letter))
     
 I = Rotor(I_WIRING, I_TURNOVER_POSITION)
@@ -48,31 +48,50 @@ class Machine(object):
     def __init__(self, rotors):
         self.rotors = rotors
     
-    def _sendThroughRotorsRight(self, letter):
-        pass
-    
+    def _sendThroughRotorsRight(self, letter, rotors):
+        
+        print '%c -> %c' % (letter, rotors[0].encodeRight(letter))
+        
+        if len(rotors) == 1:
+            return rotors[0].encodeRight(letter)
+        else:
+            return self._sendThroughRotorsRight(rotors[0].encodeRight(letter), rotors[1:])
+            
     def encode(self, letter):
         pass
         
+ 
+ 
+class MacineTest(unittest.TestCase):
     
+    def setUp(self):
+        self.machine = Machine([III, II, I])
+        
+    def test_sendThroughRotorsRight(self):
+        self.assertEqual('G', self.machine._sendThroughRotorsRight('A', self.machine.rotors[::-1]))
+        self.assertEqual('Y', self.machine._sendThroughRotorsRight('O', self.machine.rotors[::-1]))
     
 class RotorTest(unittest.TestCase):
-            
+             
     def setUp(self):
         self.rotor = I
-    
+     
     def testEncodeLeft(self):
-        self.assertEqual('E', self.rotor.encodeLeft('A'))
-        self.assertEqual('K', self.rotor.encodeLeft('B'))
-    
+        self.assertEqual('U', self.rotor.encodeLeft('A'))
+        self.assertEqual('W', self.rotor.encodeLeft('B'))
+     
     def testEncodeRight(self):
-        self.assertEqual('A', self.rotor.encodeRight('E'))
-        self.assertEqual('B', self.rotor.encodeRight('K'))
-    
+        self.assertEqual('E', self.rotor.encodeRight('A'))
+        self.assertEqual('K', self.rotor.encodeRight('B'))
+     
     def testTurnover(self):
-        self.assertEqual('E', self.rotor.encodeLeft('A'))
+        self.assertEqual('U', self.rotor.encodeLeft('A'))
+        self.assertEqual('E', self.rotor.encodeRight('A'))
+        
         self.rotor.turnover()
-        self.assertEqual('K', self.rotor.encodeLeft('A'))
+        self.assertEqual('T', self.rotor.encodeLeft('A'))
+        self.assertEqual('K', self.rotor.encodeRight('A'))
         self.rotor.turnover()
-        self.assertEqual('M', self.rotor.encodeLeft('A'))
+        self.assertEqual('S', self.rotor.encodeLeft('A'))
+        self.assertEqual('M', self.rotor.encodeRight('A'))
         
