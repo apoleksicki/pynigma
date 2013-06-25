@@ -6,12 +6,17 @@ Created on 15/06/2013
 import unittest
 
 
-I = ('E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', \
+I_WIRING = ('E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', \
      'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J')
-II = ('A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', \
+II_WIRING = ('A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', \
       'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E')
-III = ('B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T', 'X', 'V', 'Z', 'N', 'Y', \
+III_WIRING = ('B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T', 'X', 'V', 'Z', 'N', 'Y', \
        'E', 'I', 'W', 'G', 'A', 'K', 'M', 'U', 'S', 'Q', 'O')
+
+I_TURNOVER_POSITION = 'Q'
+II_TURNOVER_POSITION = 'E'
+III_TURNOVER_POSITION = 'V'
+
 
 class Rotor(object):
     _letter_number_map = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6, 'H':7, 'I':8, \
@@ -22,8 +27,9 @@ class Rotor(object):
                    9:'J', 10:'K', 11:'L', 12:'M', 13:'N', 14:'O', 15:'P', 16:'Q', \
                    17:'R', 18:'S', 19:'T', 20:'U', 21:'V', 22:'W', 23:'X', 24:'Y', 25:'Z'}
     
-    def __init__(self, order, pushPostion = 'A'):
+    def __init__(self, order, turnoverPosition = 'A'):
         self._order = list(order)
+        self.turnoverPosition = turnoverPosition
         
     def turnover(self):
         self._order.append(self._order.pop(0))
@@ -34,11 +40,15 @@ class Rotor(object):
     def encodeRight(self, letter):
         return Rotor._number_letter_map.get(self._order.index(letter))
     
+I = Rotor(I_WIRING, I_TURNOVER_POSITION)
+II = Rotor(II_WIRING, II_TURNOVER_POSITION)
+III = Rotor(III_WIRING, III_TURNOVER_POSITION)
+
 class Machine(object):
     def __init__(self, rotors):
         self.rotors = rotors
     
-    def _sendThroughRotors(self, letter):
+    def _sendThroughRotorsRight(self, letter):
         pass
     
     def encode(self, letter):
@@ -49,7 +59,7 @@ class Machine(object):
 class RotorTest(unittest.TestCase):
             
     def setUp(self):
-        self.rotor = Rotor(I)
+        self.rotor = I
     
     def testEncodeLeft(self):
         self.assertEqual('E', self.rotor.encodeLeft('A'))
