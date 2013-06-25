@@ -17,6 +17,11 @@ I_TURNOVER_POSITION = 'Q'
 II_TURNOVER_POSITION = 'E'
 III_TURNOVER_POSITION = 'V'
 
+REFLECTOR_B =   {'A':'Y', 'B':'R', 'C':'U', 'D':'H', 'E':'Q', 'F':'S', 'G':'L', 'H':'D', \
+                 'I':'P', 'J':'X', 'K':'N', 'L':'G', 'M':'O', 'N':'K', 'O':'M', 'P':'I', \
+                 'Q':'E', 'R':'B', 'S':'F', 'T':'Z', 'U':'C', 'V':'W', 'W':'V', 'X':'J', \
+                 'Y':'A', 'Z':'T'}
+
 
 class Rotor(object):
     _letter_number_map = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6, 'H':7, 'I':8, \
@@ -45,8 +50,9 @@ II = Rotor(II_WIRING, II_TURNOVER_POSITION)
 III = Rotor(III_WIRING, III_TURNOVER_POSITION)
 
 class Machine(object):
-    def __init__(self, rotors):
+    def __init__(self, rotors, reflector = REFLECTOR_B):
         self.rotors = rotors
+        self._reflector = reflector
     
     def _sendThroughRotorsRight(self, letter):
         return self._sendThroughRotors(letter, self.rotors[::-1], \
@@ -69,7 +75,9 @@ class Machine(object):
 
     
     def encode(self, letter):
-        pass
+        encodedRight = self._sendThroughRotorsRight(letter)
+        reflected = self._reflector[encodedRight]
+        return self._sendThroughRotorsLeft(reflected)
     
         
  
@@ -86,6 +94,10 @@ class MacineTest(unittest.TestCase):
     def test_sendThroughRotorsLeft(self):
         self.assertEqual('A', self.machine._sendThroughRotorsLeft('G'))
         self.assertEqual('O', self.machine._sendThroughRotorsLeft('Y'))
+        
+    def testEncode(self):
+        self.assertEqual('N', self.machine.encode('A'))
+        
     
 class RotorTest(unittest.TestCase):
              
