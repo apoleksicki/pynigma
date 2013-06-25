@@ -48,26 +48,29 @@ class Machine(object):
     def __init__(self, rotors):
         self.rotors = rotors
     
-    def _sendThroughRotorsRight(self, letter, rotors):
-        
-        print '%c -> %c' % (letter, rotors[0].encodeRight(letter))
-        
-        if len(rotors) == 1:
-            return rotors[0].encodeRight(letter)
-        else:
-            return self._sendThroughRotorsRight(rotors[0].encodeRight(letter), rotors[1:])
+    def _sendThroughRotorsRight(self, letter):
+        return self._sendThroughRotors(letter, self.rotors[::-1], \
+                                        lambda rotor, letter: rotor.encodeRight(letter))
             
-    def _sendThroughRotorsLeft(self, letter, rotors):
+    def _sendThroughRotorsLeft(self, letter):
+        return self._sendThroughRotors(letter, self.rotors, \
+                                        lambda rotor, letter: rotor.encodeLeft(letter))
         
-        print '%c -> %c' % (letter, rotors[0].encodeRight(letter))
-        
-        if len(rotors) == 1:
-            return rotors[0].encodeLeft(letter)
-        else:
-            return self._sendThroughRotorsLeft(rotors[0].encodeLeft(letter), rotors[1:])
             
+    def _sendThroughRotors(self, letter, rotors, encodingFunction):
+        
+        print '%c -> %c' % (letter, encodingFunction(rotors[0], letter))
+                            
+        if len(rotors) == 1:
+            print ''
+            return encodingFunction(rotors[0], letter)
+        else:
+            return self._sendThroughRotors(encodingFunction(rotors[0], letter), rotors[1:], encodingFunction)
+
+    
     def encode(self, letter):
         pass
+    
         
  
  
@@ -77,12 +80,12 @@ class MacineTest(unittest.TestCase):
         self.machine = Machine([III, II, I])
         
     def test_sendThroughRotorsRight(self):
-        self.assertEqual('G', self.machine._sendThroughRotorsRight('A', self.machine.rotors[::-1]))
-        self.assertEqual('Y', self.machine._sendThroughRotorsRight('O', self.machine.rotors[::-1]))
+        self.assertEqual('G', self.machine._sendThroughRotorsRight('A'))
+        self.assertEqual('Y', self.machine._sendThroughRotorsRight('O'))
     
     def test_sendThroughRotorsLeft(self):
-        self.assertEqual('A', self.machine._sendThroughRotorsLeft('G', self.machine.rotors[::1]))
-        self.assertEqual('O', self.machine._sendThroughRotorsLeft('Y', self.machine.rotors[::1]))
+        self.assertEqual('A', self.machine._sendThroughRotorsLeft('G'))
+        self.assertEqual('O', self.machine._sendThroughRotorsLeft('Y'))
     
 class RotorTest(unittest.TestCase):
              
