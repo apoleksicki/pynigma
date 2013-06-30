@@ -34,20 +34,38 @@ class Rotor(object):
     
     def __init__(self, order, turnoverPosition = 'A'):
         self._order = list(order)
-        self.turnoverPosition = turnoverPosition
+        self.turnoverPosition =  Rotor._letter_number_map[turnoverPosition]
+        self._position = 0
         
     def turnover(self):
         self._order.append(self._order.pop(0))
-    
+        self._position += 1
+        if self._position == 26:
+            self._position = 0
+
+    def setPosition(self, position):
+        while position != self._position:
+            self.turnover()
+            
     def encodeRight(self, letter):
         return self._order[Rotor._letter_number_map.get(letter)]
     
     def encodeLeft(self, letter):
         return Rotor._number_letter_map.get(self._order.index(letter))
     
-I = Rotor(I_WIRING, I_TURNOVER_POSITION)
-II = Rotor(II_WIRING, II_TURNOVER_POSITION)
-III = Rotor(III_WIRING, III_TURNOVER_POSITION)
+    def getPosition(self):
+        return Rotor._number_letter_map[self._position]
+    
+    
+
+def rotorI():
+    return Rotor(I_WIRING, I_TURNOVER_POSITION)
+
+def rotorII():
+    return Rotor(II_WIRING, II_TURNOVER_POSITION)
+
+def rotorIII():
+    return Rotor(III_WIRING, III_TURNOVER_POSITION)
 
 class Machine(object):
     def __init__(self, rotors, reflector = REFLECTOR_B):
@@ -72,20 +90,35 @@ class Machine(object):
             return encodingFunction(rotors[0], letter)
         else:
             return self._sendThroughRotors(encodingFunction(rotors[0], letter), rotors[1:], encodingFunction)
+    
+    def _rotate(self):
+        self.rotors[2].turnover()
+        if self.rotors[2].getPosition() == self.rotors[2].turnoverPosition:
+            self.rotors[1].turnover()
+        
+        if self.rotors[1].getPosition() == self.rotors[1].turnoverPosition:
+            self.rotors[0].turnover()
+            self.rotors[1].turnover()
+
 
     
     def encode(self, letter):
+        self._rotate()
         encodedRight = self._sendThroughRotorsRight(letter)
         reflected = self._reflector[encodedRight]
         return self._sendThroughRotorsLeft(reflected)
     
+    def adjustRotor(self, rotorNumber, position):
+        self.rotors[rotorNumber].setPosition(position)
+        
+    
         
  
  
-class MacineTest(unittest.TestCase):
+class MachineTest(unittest.TestCase):
     
     def setUp(self):
-        self.machine = Machine([III, II, I])
+        self.machine = Machine([rotorIII(), rotorII(), rotorI()])
         
     def test_sendThroughRotorsRight(self):
         self.assertEqual('G', self.machine._sendThroughRotorsRight('A'))
@@ -96,13 +129,17 @@ class MacineTest(unittest.TestCase):
         self.assertEqual('O', self.machine._sendThroughRotorsLeft('Y'))
         
     def testEncode(self):
-        self.assertEqual('N', self.machine.encode('A'))
+        print 'test encode'
+        self.assertEqual('E', self.machine.encode('A'))
+        
+class TurnoverTest(unittest.TestCase):
+    pass
         
     
 class RotorTest(unittest.TestCase):
              
     def setUp(self):
-        self.rotor = I
+        self.rotor = rotorI()
      
     def testEncodeLeft(self):
         self.assertEqual('U', self.rotor.encodeLeft('A'))
