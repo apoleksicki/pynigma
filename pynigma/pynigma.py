@@ -24,6 +24,7 @@ REFLECTOR_B =   {'A':'Y', 'B':'R', 'C':'U', 'D':'H', 'E':'Q', 'F':'S', 'G':'L', 
 
 
 class Rotor(object):
+    _number_of_characters = 26
     _letter_number_map = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6, 'H':7, 'I':8, \
                    'J':9, 'K':10, 'L':11, 'M':12, 'N':13, 'O':14, 'P':15, 'Q':16, \
                    'R':17, 'S':18, 'T':19, 'U':20, 'V':21, 'W':22, 'X':23, 'Y':24, 'Z':25}
@@ -40,7 +41,7 @@ class Rotor(object):
     def turnover(self):
         self._order.append(self._order.pop(0))
         self._position += 1
-        if self._position == 26:
+        if self._position == Rotor._number_of_characters:
             self._position = 0
 
     def setPosition(self, position):
@@ -54,12 +55,18 @@ class Rotor(object):
     def encodeRight(self, letter):
         mapped = self._order[Rotor._letter_number_map.get(letter)]# d
         withOffset = Rotor._letter_number_map[mapped] - self._position 
-        return Rotor._number_letter_map[withOffset]
+        return Rotor._number_letter_map[self._calculateOffset(withOffset)]
     
     def getPosition(self):
         return Rotor._number_letter_map[self._position]
     
-    
+    def _calculateOffset(self, position):
+        if(position < 0):
+            return Rotor._number_of_characters - abs(position)
+        elif(position > Rotor._number_of_characters):
+            return position - Rotor._number_of_characters
+        else:
+            return position            
 
 def rotorI():
     return Rotor(I_WIRING, I_TURNOVER_POSITION)
