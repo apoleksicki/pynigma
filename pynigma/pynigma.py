@@ -44,14 +44,17 @@ class Rotor(object):
             self._position = 0
 
     def setPosition(self, position):
-        while position != self._position:
+        while Rotor._letter_number_map[position] != self._position:
             self.turnover()
             
-    def encodeRight(self, letter):
-        return self._order[Rotor._letter_number_map.get(letter)]
-    
     def encodeLeft(self, letter):
         return Rotor._number_letter_map.get(self._order.index(letter))
+
+    
+    def encodeRight(self, letter):
+        mapped = self._order[Rotor._letter_number_map.get(letter)]# d
+        withOffset = Rotor._letter_number_map[mapped] - self._position 
+        return Rotor._number_letter_map[withOffset]
     
     def getPosition(self):
         return Rotor._number_letter_map[self._position]
@@ -72,13 +75,15 @@ class Machine(object):
         self.rotors = rotors
         self._reflector = reflector
     
-    def _sendThroughRotorsRight(self, letter):
-        return self._sendThroughRotors(letter, self.rotors[::-1], \
-                                        lambda rotor, letter: rotor.encodeRight(letter))
-            
     def _sendThroughRotorsLeft(self, letter):
         return self._sendThroughRotors(letter, self.rotors, \
                                         lambda rotor, letter: rotor.encodeLeft(letter))
+            
+    def _sendThroughRotorsRight(self, letter):
+        return self._sendThroughRotors(letter, self.rotors[::-1], \
+                                        lambda rotor, letter: rotor.encodeRight(letter))
+
+
         
             
     def _sendThroughRotors(self, letter, rotors, encodingFunction):
@@ -118,22 +123,33 @@ class Machine(object):
 class MachineTest(unittest.TestCase):
     
     def setUp(self):
-        self.machine = Machine([rotorIII(), rotorII(), rotorI()])
+        self.machine = Machine([rotorI(), rotorII(), rotorIII()])
         
     def test_sendThroughRotorsRight(self):
-        self.assertEqual('G', self.machine._sendThroughRotorsRight('A'))
+        self.assertEqual('Z', self.machine._sendThroughRotorsRight('A'))
         self.assertEqual('Y', self.machine._sendThroughRotorsRight('O'))
     
     def test_sendThroughRotorsLeft(self):
-        self.assertEqual('A', self.machine._sendThroughRotorsLeft('G'))
+        print 'test'
+        self.assertEqual('R', self.machine._sendThroughRotorsLeft('G'))
+        print 'test'
+
         self.assertEqual('O', self.machine._sendThroughRotorsLeft('Y'))
         
     def testEncode(self):
-        print 'test encode'
-        self.assertEqual('E', self.machine.encode('A'))
+        self.assertEqual('B', self.machine.encode('A'))
         
 class TurnoverTest(unittest.TestCase):
-    pass
+    def setUp(self):
+        self.rotors = [rotorI(), rotorII(), rotorIII()]
+        self.machine = Machine(self.rotors)
+    
+    def testNormalSequence(self):
+        print 'test rotate'
+        self.rotors[2].setPosition('Z')
+        self.assertEqual('U', self.machine.encode('A'))
+        self.assertEqual('B', self.machine.encode('A'))
+    
         
     
 class RotorTest(unittest.TestCase):
@@ -160,3 +176,5 @@ class RotorTest(unittest.TestCase):
         self.assertEqual('S', self.rotor.encodeLeft('A'))
         self.assertEqual('M', self.rotor.encodeRight('A'))
         
+if __name__ == "__main__":
+    unittest.main()
