@@ -49,7 +49,9 @@ class Rotor(object):
             self.turnover()
             
     def encodeLeft(self, letter):
-        return Rotor._number_letter_map.get(self._order.index(letter))
+        asNumber = Rotor._letter_number_map[letter]
+        asLetter = Rotor._number_letter_map[self._calculateOffset(asNumber + self._position)]
+        return Rotor._number_letter_map.get(self._order.index(asLetter))
 
     
     def encodeRight(self, letter):
@@ -177,11 +179,11 @@ class RotorTest(unittest.TestCase):
         self.assertEqual('E', self.rotor.encodeRight('A'))
         
         self.rotor.turnover()
-        self.assertEqual('T', self.rotor.encodeLeft('A'))
-        self.assertEqual('K', self.rotor.encodeRight('A'))
+        self.assertEqual('V', self.rotor.encodeLeft('A'))
+        self.assertEqual('J', self.rotor.encodeRight('A'))
         self.rotor.turnover()
-        self.assertEqual('S', self.rotor.encodeLeft('A'))
-        self.assertEqual('M', self.rotor.encodeRight('A'))
+        self.assertEqual('W', self.rotor.encodeLeft('A'))
+        self.assertEqual('K', self.rotor.encodeRight('A'))
         
 if __name__ == "__main__":
     unittest.main()
