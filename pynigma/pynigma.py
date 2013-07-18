@@ -65,7 +65,7 @@ class Rotor(object):
     def _calculateOffset(self, position):
         if(position < 0):
             return Rotor._number_of_characters - abs(position)
-        elif(position > Rotor._number_of_characters):
+        elif(position >= Rotor._number_of_characters):
             return position - Rotor._number_of_characters
         else:
             return position            
@@ -97,10 +97,9 @@ class Machine(object):
             
     def _sendThroughRotors(self, letter, rotors, encodingFunction):
         
-        print '%c -> %c' % (letter, encodingFunction(rotors[0], letter))
+        #print '%c -> %c' % (letter, encodingFunction(rotors[0], letter))
                             
         if len(rotors) == 1:
-            print ''
             return encodingFunction(rotors[0], letter)
         else:
             return self._sendThroughRotors(encodingFunction(rotors[0], letter), rotors[1:], encodingFunction)
@@ -148,6 +147,13 @@ class MachineTest(unittest.TestCase):
     def testEncode(self):
         self.assertEqual('B', self.machine.encode('A'))
         
+    def testEncodeZZZ(self):
+        self.machine.adjustRotor(0, 'Z')
+        self.machine.adjustRotor(1, 'Z')
+        self.machine.adjustRotor(2, 'Z')
+        self.assertEqual('E', self.machine.encode('A'))
+
+        
 class TurnoverTest(unittest.TestCase):
     def setUp(self):
         self.rotors = [rotorI(), rotorII(), rotorIII()]
@@ -186,4 +192,9 @@ class RotorTest(unittest.TestCase):
         self.assertEqual('K', self.rotor.encodeRight('A'))
         
 if __name__ == "__main__":
-    unittest.main()
+    machine = Machine([rotorI(), rotorII(), rotorIII()])
+    result = ''
+    for c in 'ANTONIPIOTROLEKSICKI':
+        result += machine.encode(c)
+    print result
+    
