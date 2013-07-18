@@ -152,6 +152,15 @@ class MachineTest(unittest.TestCase):
         self.machine.adjustRotor(1, 'Z')
         self.machine.adjustRotor(2, 'Z')
         self.assertEqual('E', self.machine.encode('A'))
+        
+    def testDoubleStep(self):
+        self.machine.adjustRotor(0, 'A')
+        self.machine.adjustRotor(1, 'D')
+        self.machine.adjustRotor(2, 'U')
+        self.assertEqual('E', self.machine.encode('A'))
+        self.assertEqual('G', self.machine.encode('P'))
+        self.assertEqual('V', self.machine.encode('O'))
+ 
 
         
 class TurnoverTest(unittest.TestCase):
