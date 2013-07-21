@@ -14,6 +14,7 @@ class PynimgaUI(object):
         gtk.main_quit()
     
     def __init__(self):
+        self.letterCounter = 0
         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         window.set_resizable(True)  
         window.connect('destroy', self.close_application)
@@ -34,7 +35,13 @@ class PynimgaUI(object):
 
     def _printChar(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
-        self.textbuffer.insert(self.iter, keyname)
+        if len(keyname) == 1:
+            self.textbuffer.insert(self.iter, keyname.upper())
+            self.letterCounter += 1
+            if self.letterCounter == 5:
+                self.letterCounter = 0
+                self.textbuffer.insert(self.iter, ' ')
+
 
         
     
