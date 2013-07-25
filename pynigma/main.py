@@ -23,18 +23,12 @@ class PynimgaUI(object):
         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         window.set_resizable(True)  
         window.connect('destroy', self.close_application)
-        window.set_title('TextView Widget Basic Example')
+        window.set_title('Pynigma')
         window.set_border_width(0)
         
-        textviewRotorI = gtk.TextView()
-        textviewRotorI.set_editable(False)
-        textviewRotorI.set_cursor_visible(False)
-        
-        textviewRotorI = gtk.TextView()
-        textviewRotorI.set_editable(False)
-        textviewRotorI.set_cursor_visible(False)
-        
-        textviewRotorIII, self.rotorII_updater = self._textselfView_and_updater_for_rotor(self.rIII)
+        textviewRotorI, self.rotorI_updater = self._textselfView_and_updater_for_rotor(self.rI)
+        textviewRotorII, self.rotorII_updater = self._textselfView_and_updater_for_rotor(self.rII)
+        textviewRotorIII, self.rotorIII_updater = self._textselfView_and_updater_for_rotor(self.rIII)
         
         textviewEncoded = gtk.TextView()
         textviewEncoded.set_editable(False)
@@ -47,14 +41,23 @@ class PynimgaUI(object):
         labelEncoded = gtk.Label('Encoded')
         labelPlain = gtk.Label('Plain')
         
+        
+        rotorbox = gtk.HBox(False, 4)
+        rotorbox.pack_start(textviewRotorI)
+        rotorbox.pack_start(textviewRotorII)
+        rotorbox.pack_start(textviewRotorIII)
+        
         box = gtk.VBox(False, 0)
-        box.pack_start(textviewRotorIII)
+        box.pack_start(rotorbox)
         box.pack_start(labelEncoded)
         box.pack_start(textviewEncoded)
         box.pack_start(labelPlain)
         box.pack_start(textviewPlain)
         
+        textviewRotorI.show()
+        textviewRotorII.show()
         textviewRotorIII.show()
+        rotorbox.show()
         labelEncoded.show()
         textviewEncoded.show()
         labelPlain.show()
@@ -85,7 +88,9 @@ class PynimgaUI(object):
             self.textbufferEncoded.insert(self.iterEncoded, self.machine.encode(keyname.upper()))
             self.textbufferPlain.insert(self.iterPlain,  keyname.upper())
             self.letterCounter += 1
+            self.rotorI_updater.__call__()
             self.rotorII_updater.__call__()
+            self.rotorIII_updater.__call__()
             
             if self.letterCounter == 5:
                 self.letterCounter = 0

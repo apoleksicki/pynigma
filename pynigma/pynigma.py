@@ -107,7 +107,6 @@ class Machine(object):
             self.rotors[1].turnover()
             
         if self.rotors[2].getPosition() == self.rotors[2].turnoverPosition:
-            print 'rotor 1 turned'
             self.rotors[1].turnover()
         
         self.rotors[2].turnover()
