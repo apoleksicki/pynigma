@@ -60,6 +60,7 @@ class Rotor(object):
         return Rotor._number_letter_map[self._calculateOffset(withOffset)]
     
     def getPosition(self):
+        print 'The position is %s' % Rotor._number_letter_map[self._position]
         return Rotor._number_letter_map[self._position]
     
     def _calculateOffset(self, position):
