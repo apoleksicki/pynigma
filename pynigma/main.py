@@ -79,7 +79,9 @@ class PynimgaUI(object):
         textview.set_editable(False)
         textview.set_cursor_visible(False)
         textbuffer = textview.get_buffer()
-        return (textview, lambda: textbuffer.set_text(rotor.getPosition()))
+        updater = lambda: textbuffer.set_text(rotor.getPosition())
+        updater.__call__()
+        return (textview, updater)
 
 
     def _printChar(self, widget, event):
