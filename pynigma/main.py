@@ -43,8 +43,8 @@ class PynimgaUI(object):
         labelPlain = gtk.Label('Plain')
         
         
-        rotorbox = gtk.HBox(True, 0)
-        label = gtk.Label('fooooooooooooooooooooo')
+        rotorbox = gtk.HBox(False, 0)
+        label = gtk.Label('Rotors: ')
         rotorbox.pack_start(label, fill = True, expand = True)
         label.show()
         
@@ -55,7 +55,6 @@ class PynimgaUI(object):
         box = gtk.VBox(False, 0)
         box.pack_start(rotorbox, fill = False, expand = False)
         
-        encodedBox = gtk.HBox(False, 0)
         box.pack_start(labelEncoded)
         box.pack_start(textviewEncoded)
         box.pack_start(labelPlain)
@@ -87,7 +86,7 @@ class PynimgaUI(object):
         textview = gtk.TextView()
         textview.set_editable(False)
         textview.set_cursor_visible(False)
-        textview.set_border_color('red')
+        textview.set_border_width(5)
         textbuffer = textview.get_buffer()
         updater = lambda: textbuffer.set_text(rotor.getPosition())
         updater.__call__()
