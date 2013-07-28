@@ -32,17 +32,10 @@ class PynimgaUI(object):
         textviewRotorII = self._textselfView_and_updater_for_rotor(self.rII)
         textviewRotorIII = self._textselfView_and_updater_for_rotor(self.rIII)
         
-        textviewEncoded = gtk.TextView()
-        textviewEncoded.set_editable(False)
-        textviewEncoded.set_cursor_visible(False)
         
-        textviewPlain = gtk.TextView()
-        textviewPlain.set_editable(False)
-        textviewPlain.set_cursor_visible(False)
         
-        labelEncoded = gtk.Label('Encoded')
-        labelPlain = gtk.Label('Plain')
-        
+        encodedBox, self.textbufferEncoded = self._createTextview('Encoded')
+        plainBox, self.textbufferPlain = self._createTextview('Plain')
         
         rotorbox = gtk.HBox(False, 0)
         label = gtk.Label('Rotors: ')
@@ -56,10 +49,8 @@ class PynimgaUI(object):
         box = gtk.VBox(False, 0)
         box.pack_start(rotorbox, fill = False, expand = False)
         
-        box.pack_start(labelEncoded, expand = False)
-        box.pack_start(textviewEncoded)
-        box.pack_start(labelPlain)
-        box.pack_start(textviewPlain)
+        box.pack_start(encodedBox, expand = False)
+        box.pack_start(plainBox, expand = False)
         
         textviewRotorI.show()
         textviewRotorII.show()
@@ -67,14 +58,8 @@ class PynimgaUI(object):
         
         
         rotorbox.show()
-        labelEncoded.show()
-        textviewEncoded.show()
-        labelPlain.show()
-        textviewPlain.show()
         window.add(box)
         box.show()
-        self.textbufferEncoded = textviewEncoded.get_buffer()
-        self.textbufferPlain= textviewPlain.get_buffer()
         self.iterEncoded = self.textbufferEncoded.get_end_iter()
         self.iterPlain = self.textbufferPlain.get_end_iter()
         
@@ -105,6 +90,27 @@ class PynimgaUI(object):
                 self.letterCounter = 0
                 self.textbufferEncoded.insert(self.iterEncoded, ' ')
                 self.textbufferPlain.insert(self.iterPlain, ' ')
+    
+    def _createTextview(self, labelText):
+        textview = gtk.TextView()
+        textview.set_editable(False)
+        textview.set_cursor_visible(False)
+        textview.set_wrap_mode(gtk.WRAP_WORD)
+        label = gtk.Label(labelText)
+        sw = gtk.ScrolledWindow()
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        sw.add(textview)
+        sw.show()
+        label.show()
+        textview.show()
+        box = gtk.VBox(False, 0)
+        box.add(label)
+        box.add(sw)
+        box.show()
+        return (box, textview.get_buffer())
+
+
+        
 
 
         
