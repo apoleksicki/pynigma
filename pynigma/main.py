@@ -34,8 +34,8 @@ class PynimgaUI(object):
         
         
         
-        encodedBox, self.textbufferEncoded = self._createTextview('Encoded')
-        plainBox, self.textbufferPlain = self._createTextview('Plain')
+        outputBox, self.textbufferOutput = self._createTextview('Output')
+        inputBox, self.textbufferInput = self._createTextview('Input')
         
         rotorbox = gtk.HBox(False, 0)
         label = gtk.Label('Rotors: ')
@@ -49,8 +49,8 @@ class PynimgaUI(object):
         box = gtk.VBox(False, 0)
         box.pack_start(rotorbox, fill = False, expand = False)
         
-        box.pack_start(encodedBox, expand = False)
-        box.pack_start(plainBox, expand = False)
+        box.pack_start(outputBox, expand = False)
+        box.pack_start(inputBox, expand = False)
         
         textviewRotorI.show()
         textviewRotorII.show()
@@ -60,8 +60,8 @@ class PynimgaUI(object):
         rotorbox.show()
         window.add(box)
         box.show()
-        self.iterEncoded = self.textbufferEncoded.get_end_iter()
-        self.iterPlain = self.textbufferPlain.get_end_iter()
+        self.iterOutput = self.textbufferOutput.get_end_iter()
+        self.iterInput = self.textbufferInput.get_end_iter()
         
         window.connect('key_press_event', self._printChar)
         window.show()
@@ -81,15 +81,15 @@ class PynimgaUI(object):
     def _printChar(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
         if len(keyname) == 1:
-            self.textbufferEncoded.insert(self.iterEncoded, self.machine.encode(keyname.upper()))
-            self.textbufferPlain.insert(self.iterPlain,  keyname.upper())
+            self.textbufferOutput.insert(self.iterOutput, self.machine.encode(keyname.upper()))
+            self.textbufferInput.insert(self.iterInput,  keyname.upper())
             self.letterCounter += 1
             [updater.__call__() for updater in self.updaters ]
             
             if self.letterCounter == 5:
                 self.letterCounter = 0
-                self.textbufferEncoded.insert(self.iterEncoded, ' ')
-                self.textbufferPlain.insert(self.iterPlain, ' ')
+                self.textbufferOutput.insert(self.iterOutput, ' ')
+                self.textbufferInput.insert(self.iterInput, ' ')
     
     def _createTextview(self, labelText):
         textview = gtk.TextView()
