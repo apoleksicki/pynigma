@@ -6,16 +6,16 @@ Created on 15/06/2013
 import unittest
 
 
-I_WIRING = ('E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', \
+WIRING_I = ('E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', \
      'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J')
-II_WIRING = ('A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', \
+WIRING_II = ('A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', \
       'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E')
-III_WIRING = ('B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T', 'X', 'V', 'Z', 'N', 'Y', \
+WIRING_III = ('B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T', 'X', 'V', 'Z', 'N', 'Y', \
        'E', 'I', 'W', 'G', 'A', 'K', 'M', 'U', 'S', 'Q', 'O')
 
-I_TURNOVER_POSITION = 'Q'
-II_TURNOVER_POSITION = 'E'
-III_TURNOVER_POSITION = 'V'
+TURNOVER_POSITION_I = 'Q'
+TURNOVER_POSITION_II = 'E'
+TURNOVER_POSITION_III = 'V'
 
 REFLECTOR_B =   {'A':'Y', 'B':'R', 'C':'U', 'D':'H', 'E':'Q', 'F':'S', 'G':'L', 'H':'D', \
                  'I':'P', 'J':'X', 'K':'N', 'L':'G', 'M':'O', 'N':'K', 'O':'M', 'P':'I', \
@@ -71,13 +71,13 @@ class Rotor(object):
             return position            
 
 def rotorI():
-    return Rotor(I_WIRING, I_TURNOVER_POSITION)
+    return Rotor(WIRING_I, TURNOVER_POSITION_I)
 
 def rotorII():
-    return Rotor(II_WIRING, II_TURNOVER_POSITION)
+    return Rotor(WIRING_II, TURNOVER_POSITION_II)
 
 def rotorIII():
-    return Rotor(III_WIRING, III_TURNOVER_POSITION)
+    return Rotor(WIRING_III, TURNOVER_POSITION_III)
 
 class Machine(object):
     def __init__(self, rotors, reflector = REFLECTOR_B):
