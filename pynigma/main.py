@@ -49,8 +49,8 @@ class PynimgaUI(object):
         box = gtk.VBox(False, 0)
         box.pack_start(rotorbox, fill = False, expand = False)
         
-        box.pack_start(outputBox, expand = False)
         box.pack_start(inputBox, expand = False)
+        box.pack_start(outputBox, expand = False)
         
         textviewRotorI.show()
         textviewRotorII.show()
