@@ -164,7 +164,7 @@ class MachineTest(unittest.TestCase):
         self.assertEqual('X', self.machine.rotors[2].getPosition())
         
     def printRotorPositions(self):
-        print 'rotorI: %s, rotorII: %s, rotorIII: %s' % (self.machine.rotors[0].getPosition(), self.machine.rotors[1].getPosition(), self.machine.rotors[2].getPosition()) 
+        print('rotorI: %s, rotorII: %s, rotorIII: %s' % (self.machine.rotors[0].getPosition(), self.machine.rotors[1].getPosition(), self.machine.rotors[2].getPosition()))
 
         
 class TurnoverTest(unittest.TestCase):
@@ -173,7 +173,7 @@ class TurnoverTest(unittest.TestCase):
         self.machine = Machine(self.rotors)
     
     def testNormalSequence(self):
-        print 'test rotate'
+        print('test rotate')
         self.rotors[2].setPosition('Z')
         self.assertEqual('U', self.machine.encode('A'))
         self.assertEqual('B', self.machine.encode('A'))
@@ -209,5 +209,5 @@ if __name__ == "__main__":
     result = ''
     for c in 'ANTONIPIOTROLEKSICKI':
         result += machine.encode(c)
-    print result
+    print(result)
     
