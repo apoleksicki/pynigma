@@ -277,7 +277,7 @@ class Machine(object):
         self.rotors[rotorNumber].setPosition(position)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     machine = Machine([rotorI(), rotorII(), rotorIII()])
     result = ""
     for c in "ANTONIPIOTROLEKSICKI":
