@@ -10,6 +10,7 @@ dependencies = [
 
 [tool.uv]
 dev-dependencies = [
+    "mypy>=1.13.0",
     "ruff>=0.7.2",
 ]
 
@@ -31,3 +32,7 @@ exclude = [".venv"]
 
 fix = true
 
+[tool.mypy]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+python_version = "3.13"

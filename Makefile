@@ -6,3 +6,6 @@ test:
 lint:
 	ruff check
 
+types:
+	uv run mypy pynigma/ tests/
+
