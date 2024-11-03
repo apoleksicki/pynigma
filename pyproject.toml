@@ -12,3 +12,12 @@ dependencies = [
 dev-dependencies = [
     "ruff>=0.7.2",
 ]
+
+[tool.coverage.run]
+branch = true
+source = ["pynigma", "tests"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+
