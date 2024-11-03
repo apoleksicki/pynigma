@@ -3,6 +3,7 @@ Created on 15/06/2013
 
 @author: Antek
 """
+from typing import ClassVar, Callable
 
 WIRING_I = (
     "E",
@@ -124,8 +125,8 @@ REFLECTOR_B = {
 
 
 class Rotor(object):
-    _number_of_characters = 26
-    _letter_number_map = {
+    NUMBER_OF_CHARACTERS: ClassVar[int] = 26
+    LETTER_NUMBER_MAP: ClassVar[dict[str, int]] = {
         "A": 0,
         "B": 1,
         "C": 2,
@@ -154,7 +155,7 @@ class Rotor(object):
         "Z": 25,
     }
 
-    _number_letter_map = {
+    NUMBER_LETTER_MAP: ClassVar[dict[int, str]] = {
         0: "A",
         1: "B",
         2: "C",
@@ -183,73 +184,73 @@ class Rotor(object):
         25: "Z",
     }
 
-    def __init__(self, order, turnoverPosition="A"):
+    def __init__(self, order: tuple, turnoverPosition: str = "A") -> None:
         self._order = list(order)
         self.turnoverPosition = turnoverPosition
         self._position = 0
 
-    def turnover(self):
+    def turnover(self) -> None:
         self._order.append(self._order.pop(0))
         self._position += 1
-        if self._position == Rotor._number_of_characters:
+        if self._position == Rotor.NUMBER_OF_CHARACTERS:
             self._position = 0
 
-    def setPosition(self, position):
-        while Rotor._letter_number_map[position] != self._position:
+    def setPosition(self, position: str) -> None:
+        while Rotor.LETTER_NUMBER_MAP[position] != self._position:
             self.turnover()
 
-    def encodeLeft(self, letter):
-        asNumber = Rotor._letter_number_map[letter]
-        asLetter = Rotor._number_letter_map[
+    def encodeLeft(self, letter: str) -> str:
+        asNumber = Rotor.LETTER_NUMBER_MAP[letter]
+        asLetter = Rotor.NUMBER_LETTER_MAP[
             self._calculateOffset(asNumber + self._position)
         ]
-        return Rotor._number_letter_map.get(self._order.index(asLetter))
+        return Rotor.NUMBER_LETTER_MAP[self._order.index(asLetter)]
 
-    def encodeRight(self, letter):
-        mapped = self._order[Rotor._letter_number_map.get(letter)]  # d
-        withOffset = Rotor._letter_number_map[mapped] - self._position
-        return Rotor._number_letter_map[self._calculateOffset(withOffset)]
+    def encodeRight(self, letter: str) -> str:
+        mapped = self._order[Rotor.LETTER_NUMBER_MAP[letter]]  # d
+        withOffset = Rotor.LETTER_NUMBER_MAP[mapped] - self._position
+        return Rotor.NUMBER_LETTER_MAP[self._calculateOffset(withOffset)]
 
-    def getPosition(self):
-        return Rotor._number_letter_map[self._position]
+    def getPosition(self) -> str:
+        return Rotor.NUMBER_LETTER_MAP[self._position]
 
-    def _calculateOffset(self, position):
+    def _calculateOffset(self, position: int) -> int:
         if position < 0:
-            return Rotor._number_of_characters - abs(position)
-        elif position >= Rotor._number_of_characters:
-            return position - Rotor._number_of_characters
+            return Rotor.NUMBER_OF_CHARACTERS - abs(position)
+        elif position >= Rotor.NUMBER_OF_CHARACTERS:
+            return position - Rotor.NUMBER_OF_CHARACTERS
         else:
             return position
 
 
-def rotorI():
+def rotorI() -> Rotor:
     return Rotor(WIRING_I, TURNOVER_POSITION_I)
 
 
-def rotorII():
+def rotorII() -> Rotor:
     return Rotor(WIRING_II, TURNOVER_POSITION_II)
 
 
-def rotorIII():
+def rotorIII() -> Rotor:
     return Rotor(WIRING_III, TURNOVER_POSITION_III)
 
 
 class Machine(object):
-    def __init__(self, rotors, reflector=REFLECTOR_B):
+    def __init__(self, rotors: list[Rotor], reflector: dict[str, str]=REFLECTOR_B) -> None:
         self.rotors = rotors
         self._reflector = reflector
 
-    def _sendThroughRotorsLeft(self, letter):
+    def _sendThroughRotorsLeft(self, letter: str) -> str:
         return self._sendThroughRotors(
             letter, self.rotors, lambda rotor, letter: rotor.encodeLeft(letter)
         )
 
-    def _sendThroughRotorsRight(self, letter):
+    def _sendThroughRotorsRight(self, letter: str) -> str:
         return self._sendThroughRotors(
             letter, self.rotors[::-1], lambda rotor, letter: rotor.encodeRight(letter)
         )
 
-    def _sendThroughRotors(self, letter, rotors, encodingFunction):
+    def _sendThroughRotors(self, letter: str, rotors: list[Rotor], encodingFunction: Callable[[Rotor, str], str]) -> str:
         if len(rotors) == 1:
             return encodingFunction(rotors[0], letter)
         else:
@@ -257,7 +258,7 @@ class Machine(object):
                 encodingFunction(rotors[0], letter), rotors[1:], encodingFunction
             )
 
-    def _rotate(self):
+    def _rotate(self) -> None:
         if self.rotors[1].getPosition() == self.rotors[1].turnoverPosition:
             self.rotors[0].turnover()
             self.rotors[1].turnover()
@@ -267,13 +268,13 @@ class Machine(object):
 
         self.rotors[2].turnover()
 
-    def encode(self, letter):
+    def encode(self, letter: str) -> str:
         self._rotate()
         encodedRight = self._sendThroughRotorsRight(letter)
         reflected = self._reflector[encodedRight]
         return self._sendThroughRotorsLeft(reflected)
 
-    def adjustRotor(self, rotorNumber, position):
+    def adjustRotor(self, rotorNumber: int , position: str) -> None:
         self.rotors[rotorNumber].setPosition(position)
 
 
