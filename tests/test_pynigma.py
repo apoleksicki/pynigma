@@ -1,6 +1,6 @@
 import unittest
 
-from pynigma.pynigma import rotorI, rotorII, rotorIII, Machine
+from pynigma.pynigma import Machine, rotorI, rotorII, rotorIII
 
 
 class MachineTest(unittest.TestCase):
