@@ -125,7 +125,7 @@ REFLECTOR_B = {
 }
 
 
-class Rotor(object):
+class Rotor:
     NUMBER_OF_CHARACTERS: ClassVar[int] = 26
     LETTER_NUMBER_MAP: ClassVar[dict[str, int]] = {
         "A": 0,
@@ -236,7 +236,7 @@ def rotor_iii() -> Rotor:
     return Rotor(WIRING_III, TURNOVER_POSITION_III)
 
 
-class Machine(object):
+class Machine:
     def __init__(
         self, rotors: list[Rotor], reflector: dict[str, str] = REFLECTOR_B
     ) -> None:
