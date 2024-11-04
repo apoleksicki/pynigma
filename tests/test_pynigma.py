@@ -1,86 +1,86 @@
 import unittest
 
-from pynigma.pynigma import Machine, rotorI, rotorII, rotorIII
+from pynigma.pynigma import Machine, rotor_i, rotor_ii, rotor_iii
 
 
 class MachineTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.machine = Machine([rotorI(), rotorII(), rotorIII()])
+        self.machine = Machine([rotor_i(), rotor_ii(), rotor_iii()])
 
-    def test_sendThroughRotorsRight(self) -> None:
-        self.assertEqual("Z", self.machine._sendThroughRotorsRight("A"))
-        self.assertEqual("Y", self.machine._sendThroughRotorsRight("O"))
+    def test_send_through_rotors_right(self) -> None:
+        self.assertEqual("Z", self.machine._send_through_rotors_right("A"))
+        self.assertEqual("Y", self.machine._send_through_rotors_right("O"))
 
-    def test_sendThroughRotorsLeft(self) -> None:
-        self.assertEqual("R", self.machine._sendThroughRotorsLeft("G"))
+    def test_send_through_rotors_left(self) -> None:
+        self.assertEqual("R", self.machine._send_through_rotors_left("G"))
 
-        self.assertEqual("O", self.machine._sendThroughRotorsLeft("Y"))
+        self.assertEqual("O", self.machine._send_through_rotors_left("Y"))
 
-    def testEncode(self) -> None:
+    def test_encode(self) -> None:
         self.assertEqual("B", self.machine.encode("A"))
 
-    def testEncodeZZZ(self) -> None:
-        self.machine.adjustRotor(0, "Z")
-        self.machine.adjustRotor(1, "Z")
-        self.machine.adjustRotor(2, "Z")
+    def test_encode_zzz(self) -> None:
+        self.machine.adjust_rotor(0, "Z")
+        self.machine.adjust_rotor(1, "Z")
+        self.machine.adjust_rotor(2, "Z")
         self.assertEqual("E", self.machine.encode("A"))
 
-    def testDoubleStep(self) -> None:
-        self.machine.adjustRotor(0, "A")
-        self.machine.adjustRotor(1, "D")
-        self.machine.adjustRotor(2, "U")
+    def test_double_step(self) -> None:
+        self.machine.adjust_rotor(0, "A")
+        self.machine.adjust_rotor(1, "D")
+        self.machine.adjust_rotor(2, "U")
         self.assertEqual("E", self.machine.encode("A"))
-        self.printRotorPositions()
-        toAssert = self.machine.encode("P")
-        self.printRotorPositions()
-        self.assertEqual("G", toAssert)
+        self.print_rotor_positions()
+        to_assert = self.machine.encode("P")
+        self.print_rotor_positions()
+        self.assertEqual("G", to_assert)
         self.assertEqual("V", self.machine.encode("O"))
-        self.assertEqual("B", self.machine.rotors[0].getPosition())
-        self.assertEqual("F", self.machine.rotors[1].getPosition())
-        self.assertEqual("X", self.machine.rotors[2].getPosition())
+        self.assertEqual("B", self.machine.rotors[0].get_position())
+        self.assertEqual("F", self.machine.rotors[1].get_position())
+        self.assertEqual("X", self.machine.rotors[2].get_position())
 
-    def printRotorPositions(self) -> None:
+    def print_rotor_positions(self) -> None:
         print(
             "rotorI: %s, rotorII: %s, rotorIII: %s"
             % (
-                self.machine.rotors[0].getPosition(),
-                self.machine.rotors[1].getPosition(),
-                self.machine.rotors[2].getPosition(),
+                self.machine.rotors[0].get_position(),
+                self.machine.rotors[1].get_position(),
+                self.machine.rotors[2].get_position(),
             )
         )
 
 
 class TurnoverTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.rotors = [rotorI(), rotorII(), rotorIII()]
+        self.rotors = [rotor_i(), rotor_ii(), rotor_iii()]
         self.machine = Machine(self.rotors)
 
-    def testNormalSequence(self) -> None:
+    def test_normal_sequence(self) -> None:
         print("test rotate")
-        self.rotors[2].setPosition("Z")
+        self.rotors[2].set_position("Z")
         self.assertEqual("U", self.machine.encode("A"))
         self.assertEqual("B", self.machine.encode("A"))
 
 
 class RotorTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.rotor = rotorI()
+        self.rotor = rotor_i()
 
-    def testEncodeLeft(self) -> None:
-        self.assertEqual("U", self.rotor.encodeLeft("A"))
-        self.assertEqual("W", self.rotor.encodeLeft("B"))
+    def test_encode_left(self) -> None:
+        self.assertEqual("U", self.rotor.encode_left("A"))
+        self.assertEqual("W", self.rotor.encode_left("B"))
 
-    def testEncodeRight(self) -> None:
-        self.assertEqual("E", self.rotor.encodeRight("A"))
-        self.assertEqual("K", self.rotor.encodeRight("B"))
+    def test_encode_right(self) -> None:
+        self.assertEqual("E", self.rotor.encode_right("A"))
+        self.assertEqual("K", self.rotor.encode_right("B"))
 
-    def testTurnover(self) -> None:
-        self.assertEqual("U", self.rotor.encodeLeft("A"))
-        self.assertEqual("E", self.rotor.encodeRight("A"))
+    def test_turnover(self) -> None:
+        self.assertEqual("U", self.rotor.encode_left("A"))
+        self.assertEqual("E", self.rotor.encode_right("A"))
 
         self.rotor.turnover()
-        self.assertEqual("V", self.rotor.encodeLeft("A"))
-        self.assertEqual("J", self.rotor.encodeRight("A"))
+        self.assertEqual("V", self.rotor.encode_left("A"))
+        self.assertEqual("J", self.rotor.encode_right("A"))
         self.rotor.turnover()
-        self.assertEqual("W", self.rotor.encodeLeft("A"))
-        self.assertEqual("K", self.rotor.encodeRight("A"))
+        self.assertEqual("W", self.rotor.encode_left("A"))
+        self.assertEqual("K", self.rotor.encode_right("A"))
